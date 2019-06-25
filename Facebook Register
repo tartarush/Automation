@@ -1,0 +1,68 @@
+REM // VARIABLE
+Dim dtFirstName, dtLastName, dtEmail, dtConfirmEmail, dtPassword, dtDateBirth, dtMonthBirth, dtYearBirth, dtGender, dtChangeWord, dtInputGender
+
+REM // DATA TABLE
+dtFirstName	= DataTable.Value("FIRST_NAME", dtLocalSheet)
+dtLastName = DataTable.Value("LAST_NAME", dtLocalSheet)
+dtEmail	= DataTable.Value("EMAIL", dtLocalSheet)
+dtConfirmEmail = DataTable.Value("CONFIRM_EMAIL", dtLocalSheet)
+dtPassword = DataTable.Value("PASSWORD", dtLocalSheet)
+dtDateBirth = DataTable.Value("DATE_BIRTH", dtLocalSheet)
+dtMonthBirth = DataTable.Value("MONTH_BIRTH", dtLocalSheet)
+dtYearBirth = DataTable.Value("YEAR_BIRTH", dtLocalSheet)
+dtGender = DataTable.Value("GENDER", dtLocalSheet)
+dtChangeWord = DataTable.Value("CHANGE_WORD", dtLocalSheet)
+dtInputGender = DataTable.Value("INPUT_GENDER", dtLocalSheet)
+
+
+REM // CALL FUNCTION
+Call Open_Browser
+Call Register_Account
+Call Select_Gender
+Call Close_Broswer
+
+REM // FUNCTION
+Function Open_Browser
+	SystemUtil.Run "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
+	wait 1
+	Browser("Browser").Navigate "https://facebook.com/"
+End Function
+
+Function Register_Account
+	Browser("Browser").Page("Facebook - Masuk atau").WebEdit("Nama depan").Set dtFirstName
+	Browser("Browser").Page("Facebook - Masuk atau").WebEdit("Nama belakang").Set dtLastName
+	wait 1
+	Browser("Browser").Page("Facebook - Masuk atau").WebEdit("Nomor seluler atau email").Set dtEmail
+	Browser("Browser").Page("Facebook - Masuk atau").WebEdit("Masukkan ulang email").Set dtConfirmEmail
+	wait 1
+	Browser("Browser").Page("Facebook - Masuk atau").WebEdit("Kata sandi baru").Set dtPassword
+	wait 1
+	Browser("Browser").Page("Facebook - Masuk atau").WebList("Tanggal").Select dtDateBirth
+	Browser("Browser").Page("Facebook - Masuk atau").WebList("Bulan").Select dtMonthBirth
+	Browser("Browser").Page("Facebook - Masuk atau").WebList("Tahun").Select dtYearBirth
+	wait 1
+End Function
+
+Function Select_Gender
+	If dtGender = "Perempuan" Then
+		Browser("Browser").Page("Facebook - Masuk atau").WebRadioGroup("sex").Select "1"
+	ElseIf dtGender = "Laki-Laki" Then
+		Browser("Browser").Page("Facebook - Masuk atau_2").WebRadioGroup("sex").Select "2"
+	ElseIf dtGender = "Khusus" Then
+		Browser("Browser").Page("Facebook - Masuk atau_2").WebRadioGroup("sex").Select "-1"
+		wait 1
+		Browser("Browser").Page("Facebook - Masuk atau_2").WebList("Pilih kata ganti Anda").Select dtChangeWord
+		wait 1
+		Browser("Browser").Page("Facebook - Masuk atau_2").WebEdit("Masukkan jenis kelamin").Set dtInputGender
+	End If
+
+End Function
+
+Function Register
+	Browser("Browser").Page("Facebook - Masuk atau").WebButton("Daftar").Click
+End Function
+
+Function Close_Broswer
+	Browser("Browser").Close
+	wait 1
+End Function
